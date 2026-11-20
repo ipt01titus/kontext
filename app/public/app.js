@@ -271,8 +271,14 @@ function renderDetail(type,id,open=true){
  const item=get(type,id);if(!item)return;
  ui.detail={type,id};
  const scroll=drawer.scrollTop;
+ const goalDrafts=type==="goal"?[...drawer.querySelectorAll("form[data-goal-field]")].filter(f=>!f.hidden&&f.dataset.id===id).map(f=>({field:f.dataset.goalField,values:f.dataset.goalField==="criteria"?String(new FormData(f).get("criteria")||""):new FormData(f).getAll("people")})):[];
  drawer.innerHTML=`<header class="drawer-header"><span class="entity-label">${icon(entityIcon(type))}${entityLabel(type)} ${numberTag(item)}</span><button class="icon-button" data-action="close-drawer" aria-label="Details schließen">${icon("close")}</button></header><div class="drawer-body">${projectTags(item.projects)}<h2>${esc(item.name)}</h2>${detailBody(type,item)}</div>`;
  drawer.setAttribute("aria-label",item.name);
+ for(const draft of goalDrafts){
+  const form=editGoalField(id,draft.field,false);
+  if(draft.field==="criteria")form.querySelector("textarea").value=draft.values;
+  else for(const input of form.querySelectorAll('input[name="people"]'))input.checked=draft.values.includes(input.value);
+ }
  if(open&&!drawer.open)drawer.showModal();
  drawer.scrollTop=open?0:scroll;
 }
@@ -292,9 +298,39 @@ function objectDetail(o){
  const tasks=objectTasks(o.id),children=data.objects.filter(x=>x.parent===o.id),goals=data.goals.filter(g=>(g.objects||[]).includes(o.id));
  return `<p class="drawer-desc">${esc(o.description||"Noch keine Beschreibung.")}</p><button class="btn btn-secondary" data-action="edit-object" data-id="${o.id}">${icon("edit")}Objekt bearbeiten</button>${o.parent?`<div class="detail-section"><h3>Teil von</h3>${chip("object",o.parent)}</div>`:""}${children.length?`<section class="detail-section"><h3>Bestandteile</h3>${children.map(c=>chip("object",c.id)).join("")}</section>`:""}${o.links?.length?`<section class="detail-section"><h3>Weitere Verbindungen</h3>${o.links.map(l=>`<div class="detail-property"><span>${esc(l.type)}</span><div>${chip("object",l.id)}</div></div>`).join("")}</section>`:""}<section class="detail-section"><h3>Aktivitäten <button class="icon-button" data-action="new" data-type="task" data-object="${o.id}" aria-label="Aktivität ergänzen">${icon("plus")}</button></h3>${tasks.length?tasks.map(t=>taskRow(t)).join(""):'<p class="empty-small">Noch keine Aktivitäten zugeordnet.</p>'}</section>${goals.length?`<section class="detail-section"><h3>Verbundene Ziele</h3>${goals.map(g=>chip("goal",g.id)).join("")}</section>`:""}${o.people?.length?`<section class="detail-section"><h3>Personen</h3>${o.people.map(id=>chip("person",id)).join("")}</section>`:""}${commentSection("object",o)}`;
 }
+function goalCriteriaSection(g){
+ const criteria=g.criteria||[];
+ return `<section class="detail-section" data-goal-section="criteria"><h3>Woran du die Erreichung erkennst<button class="icon-button" type="button" data-action="edit-goal-field" data-field="criteria" data-id="${esc(g.id)}" aria-label="${criteria.length?"Erfolgskriterien bearbeiten":"Erfolgskriterien ergänzen"}" title="Erfolgskriterien bearbeiten">${icon(criteria.length?"edit":"plus")}</button></h3><div data-goal-read>${criteria.length?criteria.map(c=>`<div class="step">${icon("goals")}<span>${esc(c)}</span></div>`).join(""):'<p class="empty-small">Noch keine Erfolgskriterien.</p>'}</div><form class="goal-field-editor" data-goal-field="criteria" data-id="${esc(g.id)}" hidden><label for="goal-criteria">Erfolgskriterien</label><textarea id="goal-criteria" name="criteria" rows="5">${esc(criteria.join("\n"))}</textarea><small>Ein Kriterium pro Zeile. Zum Entfernen die entsprechende Zeile löschen.</small><div class="form-actions"><button class="btn btn-secondary" type="button" data-action="cancel-goal-field">Abbrechen</button><button class="btn btn-primary" type="submit">Kriterien speichern</button></div></form><p class="hint-inline">Die Erreichung bewertest du am Ergebnis.</p></section>`;
+}
+function goalPeopleSection(g){
+ const selected=g.people||[];
+ return `<section class="detail-section" data-goal-section="people"><h3>Verbundene Personen<button class="icon-button" type="button" data-action="edit-goal-field" data-field="people" data-id="${esc(g.id)}" aria-label="${selected.length?"Personen hinzufügen oder entfernen":"Person hinzufügen"}" title="Personen hinzufügen oder entfernen">${icon("plus")}</button></h3><div data-goal-read>${selected.map(id=>chip("person",id)).join("")||'<p class="empty-small">Noch keine Personen verknüpft.</p>'}</div><form class="goal-field-editor" data-goal-field="people" data-id="${esc(g.id)}" hidden><fieldset class="goal-people-picker"><legend>Personen auswählen</legend>${[...data.people].sort((a,b)=>a.name.localeCompare(b.name,"de")).map(p=>`<label><input name="people" type="checkbox" value="${esc(p.id)}" ${selected.includes(p.id)?"checked":""}><span>${esc(p.name)} ${numberTag(p)}</span></label>`).join("")}</fieldset><div class="form-actions"><button class="btn btn-secondary" type="button" data-action="cancel-goal-field">Abbrechen</button><button class="btn btn-primary" type="submit">Personen speichern</button></div></form></section>`;
+}
+function editGoalField(id,field,focus=true){
+ if(!["criteria","people"].includes(field))throw new Error("Dieses Zielfeld kann hier nicht bearbeitet werden.");
+ const section=drawer.querySelector(`[data-goal-section="${field}"]`),form=section?.querySelector("form");
+ if(!form||form.dataset.id!==id)throw new Error("Öffne das Ziel erneut, um die Änderung vorzunehmen.");
+ section.querySelector("[data-goal-read]").hidden=true;
+ section.querySelector('[data-action="edit-goal-field"]').hidden=true;
+ form.hidden=false;
+ if(focus)form.querySelector("textarea,input")?.focus();
+ return form;
+}
+async function saveGoalField(form){
+ const goal=get("goal",form.dataset.id),field=form.dataset.goalField,fd=new FormData(form);
+ if(!goal)throw new Error("Das Ziel wurde nicht gefunden.");
+ if(field==="criteria")goal.criteria=String(fd.get("criteria")||"").split("\n").map(value=>value.trim()).filter(Boolean);
+ else if(field==="people")goal.people=[...new Set(fd.getAll("people"))];
+ else throw new Error("Dieses Zielfeld kann hier nicht gespeichert werden.");
+ await persist();
+ form.hidden=true;
+ render();
+ drawer.querySelector(`[data-goal-section="${field}"] [data-action="edit-goal-field"]`)?.focus();
+ toast(field==="criteria"?"Erfolgskriterien gespeichert.":"Verbundene Personen gespeichert.");
+}
 function goalDetail(g){
  const tasks=tasksFor("goal",g.id),events=data.events.filter(e=>(e.goals||[]).includes(g.id));
- return `<p class="drawer-desc">${esc(g.description||"")}</p><div class="detail-action-bar"><button class="btn btn-secondary" data-action="edit-goal" data-id="${g.id}">${icon("edit")}Ziel bearbeiten</button><button class="btn btn-soft" data-action="goal-achieved" data-id="${g.id}">${icon("check")}${g.status==="Erreicht"?"Erreicht":"Ziel als erreicht markieren"}</button></div><div class="detail-property"><span>Zielstatus</span><div><span class="badge ${g.status==="Erreicht"?"green":""}">${esc(g.status)}</span></div></div><div class="detail-property"><span>Zieltermin</span><div>${g.targetDate?dateLabel(g.targetDate,true):"Nicht gesetzt"}</div></div>${g.type==="opportunity"?`<div class="detail-property"><span>Vertriebsphase</span><div><select class="inline-selector" data-goal-phase="${g.id}" aria-label="Vertriebsphase">${["Identifiziert","Qualifizierung","Angebot","Verhandlung"].map(p=>`<option ${p===g.phase?"selected":""}>${p}</option>`).join("")}</select></div></div><div class="detail-property"><span>Auftragswert</span><div>${g.amount?money(g.amount,g.currency):"Nicht gesetzt"}</div></div><div class="detail-property"><span>Entscheidung erwartet</span><div>${g.decisionDate?dateLabel(g.decisionDate,true):"Nicht gesetzt"}</div></div>`:""}<section class="detail-section"><h3>Woran du die Erreichung erkennst</h3>${g.criteria?.length?g.criteria.map(c=>`<div class="step">${icon("goals")}<span>${esc(c)}</span></div>`).join(""):'<p class="empty-small">Erfolgskriterien ergänzen.</p>'}<p class="hint-inline">Die Erreichung bewertest du am Ergebnis.</p></section><section class="detail-section"><h3>Verbundene Personen</h3>${(g.people||[]).map(id=>chip("person",id)).join("")||'<p class="empty-small">Noch keine Personen verknüpft.</p>'}</section><section class="detail-section"><h3>Aktivitäten <button class="icon-button" data-action="new" data-type="task" data-goal="${g.id}" aria-label="Aktivität zu diesem Ziel ergänzen">${icon("plus")}</button></h3>${tasks.length?tasks.map(t=>taskRow(t,{showWaiting:true})).join(""):'<p class="empty-small">Noch keine Aktivitäten.</p>'}</section>${events.length?`<section class="detail-section"><h3>Verbundene Ereignisse</h3>${events.map(e=>chip("event",e.id)).join("")}</section>`:""}${g.objects?.length?`<section class="detail-section"><h3>Objekte</h3>${g.objects.map(id=>chip("object",id)).join("")}</section>`:""}${commentSection("goal",g)}`;
+ return `<p class="drawer-desc">${esc(g.description||"")}</p><div class="detail-action-bar"><button class="btn btn-secondary" data-action="edit-goal" data-id="${g.id}">${icon("edit")}Ziel bearbeiten</button><button class="btn btn-soft" data-action="goal-achieved" data-id="${g.id}">${icon("check")}${g.status==="Erreicht"?"Erreicht":"Ziel als erreicht markieren"}</button></div><div class="detail-property"><span>Zielstatus</span><div><span class="badge ${g.status==="Erreicht"?"green":""}">${esc(g.status)}</span></div></div><div class="detail-property"><span>Zieltermin</span><div>${g.targetDate?dateLabel(g.targetDate,true):"Nicht gesetzt"}</div></div>${g.type==="opportunity"?`<div class="detail-property"><span>Vertriebsphase</span><div><select class="inline-selector" data-goal-phase="${g.id}" aria-label="Vertriebsphase">${["Identifiziert","Qualifizierung","Angebot","Verhandlung"].map(p=>`<option ${p===g.phase?"selected":""}>${p}</option>`).join("")}</select></div></div><div class="detail-property"><span>Auftragswert</span><div>${g.amount?money(g.amount,g.currency):"Nicht gesetzt"}</div></div><div class="detail-property"><span>Entscheidung erwartet</span><div>${g.decisionDate?dateLabel(g.decisionDate,true):"Nicht gesetzt"}</div></div>`:""}${goalCriteriaSection(g)}${goalPeopleSection(g)}<section class="detail-section"><h3>Aktivitäten <button class="icon-button" data-action="new" data-type="task" data-goal="${g.id}" aria-label="Aktivität zu diesem Ziel ergänzen">${icon("plus")}</button></h3>${tasks.length?tasks.map(t=>taskRow(t,{showWaiting:true})).join(""):'<p class="empty-small">Noch keine Aktivitäten.</p>'}</section>${events.length?`<section class="detail-section"><h3>Verbundene Ereignisse</h3>${events.map(e=>chip("event",e.id)).join("")}</section>`:""}${g.objects?.length?`<section class="detail-section"><h3>Objekte</h3>${g.objects.map(id=>chip("object",id)).join("")}</section>`:""}${commentSection("goal",g)}`;
 }
 function eventDetail(e){
  const tasks=eventTasks(e);
@@ -434,6 +470,7 @@ document.addEventListener("click",async event=>{try{
  else if(a==="task-mode"){ui.taskMode=b.dataset.value;render();}
  else if(a==="goal-filter"){ui.goalFilter=b.dataset.value;render();}
  else if(a==="new"){if(b.dataset.type)entityForm(b.dataset.type,"",{person:b.dataset.person,object:b.dataset.object,event:b.dataset.event,goal:b.dataset.goal,status:b.dataset.status,parent:b.dataset.parent});else newChooser();}
+ else if(a==="edit-goal-field")editGoalField(id,b.dataset.field);
  else if(a.startsWith("edit-"))entityForm(a.slice(5),id);
  else if(a==="close-modal")modal.close();
  else if(a==="close-drawer"){history.replaceState(null,"",location.pathname+location.search);drawer.close();ui.detail=null;}
@@ -445,6 +482,7 @@ document.addEventListener("click",async event=>{try{
  else if(a==="add-target")auxiliaryForm("target",id);
  else if(a==="add-dependency")auxiliaryForm("dependency",id);
  else if(a==="resolve-waiting"){get("task",id).waiting=[];await persist();render();toast("Rückmeldung als erhalten vermerkt.");}
+ else if(a==="cancel-goal-field"){const form=b.closest("form[data-goal-field]"),section=form.closest("[data-goal-section]");form.reset();form.hidden=true;section.querySelector("[data-goal-read]").hidden=false;const button=section.querySelector('[data-action="edit-goal-field"]');button.hidden=false;button.focus();}
  else if(a==="goal-achieved"){const g=get("goal",id);g.status=g.status==="Erreicht"?"In Verfolgung":"Erreicht";await persist();render();toast(g.status==="Erreicht"?"Ziel als erreicht markiert.":"Ziel wieder in Verfolgung.");}
  else if(a==="call-log")callLog(id);
  else if(a==="add-contact-field"){const group=document.getElementById(b.dataset.kind+"-fields");group.insertAdjacentHTML("beforeend",contactFieldRow(b.dataset.kind));group.lastElementChild.querySelector("input").focus();}
@@ -484,6 +522,7 @@ document.addEventListener("submit",async event=>{try{
  if(f.id==="inline-project-form")await saveInlineProject(f);
  else if(f.id==="inline-object-form")await saveInlineObject(f);
  else if(f.id==="entity-form")await saveEntity(f);
+ else if(f.dataset.goalField)await saveGoalField(f);
  else if(f.dataset.commentId){const x=get(f.dataset.commentType,f.dataset.commentId),text=String(new FormData(f).get("comment")||"").trim();if(!text)return;(x.comments||=[]).push({author:"urs",text,at:new Date().toISOString()});await persist();render();toast("Kommentar gespeichert.");}
  else if(f.id==="aux-form"){
   const fd=new FormData(f),t=get("task",f.dataset.id),kind=f.dataset.kind;
