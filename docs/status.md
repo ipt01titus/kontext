@@ -9,6 +9,7 @@ Stand: 20. November 2026 · Version 0.2.0. `app/` enthält den vorgezogenen loka
 - Dauerhafte SQLite-Snapshots; bestätigte Speicherung, Revisionsschutz gegen Überschreiben und wiederholbare Speicheraufträge nach verlorener Antwort.
 - Automatische konsistente Sicherung vor Änderungen; manuelle Sicherung, JSON-Export/Import und Wiederherstellung mit vorheriger Sicherheitssicherung.
 - Laufzeitdaten außerhalb der Produktdateien und von Git ausgeschlossen. Kein Geräteabgleich oder externer Dienst erforderlich.
+- Im Personendialog ein neues Projekt beziehungsweise einen Kontext direkt anlegen und zusätzlich auswählen. Bereits eingegebene Kontaktdaten und gewählte Projekte bleiben beim Anlegen oder Abbrechen erhalten; der neue Kontext wird unabhängig von der Person gespeichert. Umsetzung zu [Issue #13](https://github.com/ipt01titus/kontext/issues/13).
 
 Details: [Betriebsanleitung](betrieb/mac-probebetrieb.md), [Entscheidung 0005](entscheidungen/0005-lokaler-mac-pilot.md) und [Issue #11](https://github.com/ipt01titus/kontext/issues/11). Die folgende Tabelle dokumentiert überwiegend den übernommenen fachlichen Oberflächenumfang; sie ist keine Zusage, dass alle Produktfelder bereits vollständig umgesetzt sind.
 
@@ -41,6 +42,7 @@ Bestätigte Produktanforderung: Nutzung auf MacBook, iPad und iPhone mit Offline
 - Im Browser: eigener Projektkontext, Aktivität mit Name/Schritten/Fälligkeit, neues Objekt direkt aus der Aktivitätsanlage, gespeicherter Bezug und Kommentar; nach Beenden und Neustart des lokalen Dienstes unverändert erhalten.
 - Manuelle Sicherung und Wiederherstellung im Browser: späteren Kommentar zurückgesetzt, ursprünglichen Kommentar, Schritte, Nummer und Objektbezug erhalten. Schreibversuch bei beendetem Dienst: Eingaben bleiben sichtbar; nach Neustart und erneutem Versuch genau einmal gespeichert und nach Neuladen erhalten.
 - JSON-Export und anschließenden Dateiimport im Browser abgeschlossen: Aktivität #4 mit Objektbezug #3, Fälligkeit, zwei Schritten und beiden Kommentaren erhalten. Wechsel zu den getrennten Beispieldaten und zurück erhält den eigenen Testbestand. Alle diese Prüfungen verwenden einen eigenen Datenordner auf Port 8775; der Alltagstest beginnt separat auf Port 8773.
+- Kontextanlage aus dem Personendialog im getrennten Beispielbestand auf Port 8775 geprüft: Abbruch ohne neuen Projekteintrag; Anlegen eines Unterprojekts mit automatischer Auswahl neben zwei vorhandenen Zuordnungen; Vorname, Nachname, Firma, Position, Telefon, E-Mail, Vertrauenslevel und Notizen unverändert erhalten. Person und Zuordnungen bleiben nach Neuladen erhalten; Aktion auch beim Bearbeiten vorhanden. Desktopdarstellung geprüft, kein zusätzlicher Mobilgerätetest für diese Ergänzung.
 - Lokale Ressourcen werden vollständig vom Mac ausgeliefert; die HTTP-Prüfungen benötigen keine externen Dienste. Die Netzwerkverbindung des Mac wurde für den Test nicht abgeschaltet; ein kompletter macOS-Neustart wurde nicht ausgeführt.
 
 ## Ausgangsstand und Veröffentlichung
