@@ -1,4 +1,4 @@
-name: Prototyp prüfen
+name: Kontext prüfen
 on:
   push:
   pull_request:
@@ -16,5 +16,5 @@ jobs:
           package-manager-cache: false
       - name: JavaScript prüfen
         run: npm run check
-      - name: Modell und Migration prüfen
+      - name: Modell, lokale Speicherung und HTTP prüfen
         run: npm test

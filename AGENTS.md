@@ -17,7 +17,9 @@ Vor fachlichen Änderungen `docs/produkt/anforderungen.md`, `docs/produkt/datenm
 
 Den Umfang des jeweiligen Auftrags umsetzen. Keine neue Framework-, Hosting- oder Synchronisationsentscheidung als bereits beschlossen voraussetzen. `prototype/` ist ein übernommener Entwurf, keine Festlegung der Produktarchitektur. Änderungen an Geschäftsdaten, Integrationen und Geräteabgleich benötigen passende Prüfungen ihrer tatsächlichen Auswirkungen.
 
-`npm run check` und `npm test` prüfen den aktuellen Prototyp. Bei einer Änderung der Bedienung zusätzlich den betroffenen Ablauf im verfügbaren Browser prüfen und die Grenzen der Prüfung benennen. Keine externe Kommunikation durch den Prototyp behaupten; die Kanäle sind noch nicht angebunden.
+`npm run check` und `npm test` prüfen JavaScript, Modell, lokale Speicherung und HTTP-Grenzen. Dafür werden Node.js 24 und Python 3.9 oder neuer benötigt. Bei einer Änderung der Bedienung zusätzlich den betroffenen Ablauf im verfügbaren Browser prüfen und die Grenzen der Prüfung benennen. Keine externe Kommunikation behaupten; die Kanäle sind noch nicht angebunden.
+
+`app/` ist der lokale Mac-Pilot; `prototype/` bleibt der historische Entwurf. Die Entscheidung zur lokalen Pilotarchitektur steht in `docs/entscheidungen/0005-lokaler-mac-pilot.md`. `local-data/`, Datenbanken, Sicherungen und Exporte niemals committen. Beim Testen einen eigenen Datenordner und Port verwenden, beispielsweise `python3 -B app/launcher.py start --port 8775 --data-dir /tmp/kontext-qa --no-browser`. Browser über die vorgesehene Browsersteuerung öffnen. Den eigenen Bestand des Nutzers erhalten.
 
 ## Verlässliche Fortsetzung
 
