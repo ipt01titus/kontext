@@ -101,6 +101,16 @@ let ui={view:"today",project:"all",person:null,taskMode:"board",taskFilter:"all"
 const app=document.getElementById("app"),drawer=document.getElementById("drawer"),modal=document.getElementById("modal"),objectModal=document.getElementById("object-modal"),projectModal=document.getElementById("project-modal"),searchDialog=document.getElementById("search-dialog");
 let toastTimer;
 function toast(message){const el=document.getElementById("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3200);}
+function showActionError(error){
+ const message=error.message==="Unbekannter Aktivitätsstatus."?"Die laufende Anwendung kennt den neuen Status noch nicht. Bitte den passenden Kontext-Dienst neu starten und die Aktion erneut ausführen.":error.message||"Die Änderung konnte nicht gespeichert werden.";
+ const dialog=document.activeElement?.closest("dialog[open]")||document.querySelector("dialog[open]");
+ if(!dialog){toast(message);return;}
+ const body=dialog.querySelector(".drawer-body,.modal-body")||dialog;
+ let alert=body.querySelector("[data-action-error]");
+ if(!alert){alert=document.createElement("div");alert.className="note-panel";alert.dataset.actionError="true";alert.setAttribute("role","alert");alert.tabIndex=-1;body.prepend(alert);}
+ alert.textContent=message;
+ alert.focus();
+}
 async function persist(path="/api/state"){KontextModel.numberRecords(data);try{data=await KontextStorage.save(data,path);}catch(error){data=KontextStorage.currentState;throw error;}}
 function get(type,id){return(data[{task:"tasks",person:"people",object:"objects",goal:"goals",event:"events",project:"projects"}[type]]||[]).find(x=>x.id===id);}
 function nameOf(type,id){return get(type,id)?.name||"Eintrag";}
@@ -436,7 +446,7 @@ document.addEventListener("click",async event=>{try{
  else if(a==="calendar-today"){ui.calendarDate=TODAY;render();}
  else if(a==="calendar-date"){ui.calendarDate=b.dataset.value;ui.calendarMode="day";render();}
  else if(a==="reset-demo"){if(WORKSPACE!=="demo")return;if(await KontextStorage.confirmChange("Änderungen an den Beispieldaten zurücksetzen? Der aktuelle Stand wird vorher gesichert.")){const counter=data.nextNumber;data=KontextModel.migrate(structuredClone(seed));data.nextNumber=Math.max(data.nextNumber,counter);await persist("/api/import");modal.close();drawer.close();ui={...ui,view:"today",project:"all",person:null,detail:null};render();toast("Beispieldaten wiederhergestellt.");}}
-}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;toast(error.message||"Die Änderung konnte nicht gespeichert werden.");}
+}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;showActionError(error);}
 });
 document.addEventListener("change",async event=>{try{
  const e=event.target;
@@ -446,7 +456,7 @@ document.addEventListener("change",async event=>{try{
  else if(e.dataset.stepTask){const t=get("task",e.dataset.stepTask);t.steps[Number(e.dataset.stepIndex)].done=e.checked;await persist();render();}
  else if(e.dataset.goalPhase){get("goal",e.dataset.goalPhase).phase=e.value;await persist();render();toast("Vertriebsphase gespeichert.");}
  else if(e.name==="type"&&e.closest("#entity-form")){const f=document.getElementById("opportunity-fields");if(f)f.hidden=e.value!=="opportunity";}
-}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;toast(error.message||"Die Änderung konnte nicht gespeichert werden.");}
+}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;showActionError(error);}
 });
 document.addEventListener("input",event=>{
  if(event.target.id==="global-search")searchResults(event.target.value);
@@ -481,7 +491,7 @@ document.addEventListener("submit",async event=>{try{
   if(fd.get("copyComments")&&text)for(const id of tasks){const t=get("task",id);(t.comments||=[]).push({author:"urs",text:"Telefonat mit "+p.name+": "+text,at:new Date().toISOString(),eventId:e.id});}
   await persist();modal.close();render();toast("Telefonat dokumentiert"+(fd.get("copyComments")&&tasks.length?" und Kommentare ergänzt.":"."));
  }
-}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;toast(error.message||"Die Änderung konnte nicht gespeichert werden.");}
+}catch(error){if(event.type==="change"&&event.target.type==="checkbox")event.target.checked=!event.target.checked;showActionError(error);}
 });
 document.addEventListener("keydown",e=>{
  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openSearch();}

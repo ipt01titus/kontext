@@ -8,6 +8,12 @@ Im Projektordner `Kontext-starten.command` doppelklicken. Der Starter öffnet de
 
 Zum Beenden `Kontext-beenden.command` doppelklicken. Gespeicherte Einträge bleiben erhalten. Das Browserfenster kann geschlossen werden, ohne den Dienst zu beenden. Nach einem Neustart des Mac den Starter wieder öffnen; ein automatischer Start wurde nicht eingerichtet.
 
+### Bereits geöffneter Testbetrieb auf Port 8775
+
+Die ursprüngliche Testansicht unter `http://127.0.0.1:8775/` läuft mit dem Bestand in `/tmp/kontext-pilot-qa/`. Die normalen Starter und Beenden-Dateien für Port 8773 steuern diesen getrennten Dienst nicht. Für genau diesen bisherigen Testbetrieb gibt es `Kontext-Testbetrieb-neustarten.command`: zuerst offene Eingaben speichern, dann die Datei doppelklicken und die Seite neu laden. Sie sichert den vorhandenen Bestand zusätzlich und startet denselben Dienst mit demselben Datenordner neu. Es werden keine Daten in einen leeren eigenen Arbeitsbereich verschoben.
+
+Ein bestandener automatisierter Test aktualisiert einen bereits laufenden Dienst nicht. Insbesondere der neue Aktivitätsstatus „Abgebrochen“ benötigt diesen Neustart. Im Testbetrieb inzwischen erfasste eigene Daten müssen bei einem späteren Wechsel in den dauerhaften Mac-Betrieb ausdrücklich übernommen werden; der bisherige Ordner darf dabei nicht verworfen werden.
+
 Voraussetzung: Python **3.9 oder neuer** mit Standardbibliothek einschließlich SQLite. Auf dem Entwicklungs-Mac geprüft mit Python 3.9.6 und SQLite 3.43.2. Es sind weder npm-Pakete noch zusätzliche Python-Pakete nötig. Node.js 24 wird nur für Entwicklungsprüfungen benötigt. Der Starter prüft, ob `python3` vorhanden ist; auf einem anderen Mac muss die Laufzeit gegebenenfalls zuerst eingerichtet werden.
 
 ## Eigene Daten und Beispiele
