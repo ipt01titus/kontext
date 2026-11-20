@@ -28,6 +28,7 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 | KTX-027 | B | Projekt beziehungsweise Kontext während der Personenanlage anlegen | Kontaktdaten und bestehende Projektzuordnungen bleiben erhalten; das neue Projekt ist anschließend zusätzlich ausgewählt. Ein Abbruch der Projektanlage erzeugt keinen Eintrag. |
 | KTX-028 | B | Nicht mehr relevante Aktivitäten abbrechen | Status „Abgebrochen“ getrennt von „Erledigt“; aus offenen Aufgaben und Wiedervorlagen herausgenommen, weiterhin auffindbar und wieder zu öffnen. Identität, Nummer, Kommentare und Beziehungen bleiben erhalten. |
 | KTX-029 | B | Ereignisse können mehrere Tage dauern | Start- und Enddatum; Kalender und Heute zeigen das Ereignis an allen belegten Tagen einschließlich Wochenende. Bestehende eintägige Termine behalten ihre Identität und Beziehungen. |
+| KTX-030 | B | Erfolgskriterien und verbundene Personen in der Zielseitenleiste pflegen | Beide Abschnitte bieten direktes Bearbeiten, Speichern und Abbrechen. Kriterien und Personen bleiben nach Neuladen erhalten; übrige Zielangaben und ungespeicherte Eingaben des anderen Abschnitts werden erhalten. |
 
 ## Bestätigte Anforderungen an Geräte und Synchronisation
 
