@@ -16,6 +16,8 @@ Stand: 20. November 2026. Der übernommene Quellstand ist ein interaktiver Entwu
 | Datenaustausch | Persistenz im selben Browser | Geräteabgleich, Teamzugriff, Sicherung, Export und Wiederherstellung |
 | Integrationen | Erklärende Platzhalter | Echte Kontakte, Kalender, E-Mail und weitere Kanäle |
 
+Bestätigte Produktanforderung: Nutzung auf MacBook, iPad und iPhone mit Offlinearbeit, automatischem Geräteabgleich und sichtbarem Offline-/Abgleichstatus. Diese Funktionen sind mit der neuen Festlegung noch nicht implementiert. Siehe [Entscheidung 0003](entscheidungen/0003-apple-offline-synchronisation.md).
+
 ## Ausgeführte Prüfungen am übernommenen Stand
 
 - JavaScript-Syntax geprüft.

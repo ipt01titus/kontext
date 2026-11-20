@@ -1,6 +1,6 @@
 # Anforderungskatalog
 
-Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. Eine Umsetzung im Prototyp ist eine Erprobung und ersetzt keine fachliche Bestätigung. Technische Produktanforderungen werden nach der Diskussion zu Geräten, Betrieb und Synchronisation ergänzt.
+Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. Eine Umsetzung im Prototyp ist eine Erprobung und ersetzt keine fachliche Bestätigung. Die Anforderungen an Apple-Geräte, Offlinearbeit und automatischen Abgleich sind inzwischen bestätigt; ihre technische Umsetzung ist offen.
 
 ## Bestätigter fachlicher Kern
 
@@ -26,6 +26,25 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 | KTX-018 | B | Jeder Eintrag besitzt eine dauerhaft erkennbare Nummer | Ein Eintrag ist über seine Nummer suchbar und nach Umbenennung identifizierbar |
 | KTX-019 | B | Assistenten sollen Kontext bedienen können | Die Oberfläche ist bedienbar; eine unabhängige Programmschnittstelle ist als weiterer Bedarf zu konkretisieren |
 
+## Bestätigte Anforderungen an Geräte und Synchronisation
+
+| Kennung | Status | Anforderung | Beobachtbares Ergebnis |
+|---|---|---|---|
+| KTX-020 | B | Kontext auf MacBook, iPad und iPhone nutzen | Alle drei Geräte gehören zur verbindlichen Ziel- und Testmatrix; konkrete Mindestversionen sind noch festzulegen |
+| KTX-021 | B | Fachliche Arbeit auf jedem Gerät auch offline ermöglichen | Vorliegende Einträge und ihre Beziehungen lesen, anlegen und bearbeiten; die Bedienung wartet auf keinen Serverabgleich |
+| KTX-022 | B | Änderungen automatisch im Hintergrund abgleichen, sobald die Verbindung es zulässt | Ohne manuellen Start senden und empfangen; nach erfolgreichem Abgleich haben alle erreichbaren Geräte denselben fachlichen Stand |
+| KTX-023 | B | Offlinezustand und ausstehende Synchronisation sichtbar anzeigen | Verbindung und Abgleichstand getrennt erkennbar, einschließlich lokal noch nicht übertragener Änderungen |
+| KTX-024 | B | Offlineänderungen dauerhaft lokal erhalten | Noch nicht übertragene Änderungen überstehen das Schließen und erneute Öffnen der Anwendung und werden später abgeglichen |
+
+Der vereinbarte Bedarf ist in [Entscheidung 0003](../entscheidungen/0003-apple-offline-synchronisation.md) festgehalten. Ein Offlinegerät kann Änderungen anderer Geräte erst nach erneutem Abgleich kennen. Der gewünschte Hintergrundbetrieb bei inaktiver Anwendung bleibt ein maßgebliches Auswahlkriterium; die Einschränkungen von iOS/iPadOS werden nicht als bereits erfüllte Funktion dargestellt. Mindestversionen, genaue Abgleichfristen bei inaktiver/geschlossener App, Konfliktregeln und lokale Bereitstellung großer Datenbestände sind noch auszuarbeiten.
+
+### Geklärte bisherige Fragen
+
+| Bisherige Kennung | Festlegung |
+|---|---|
+| KTX-O01 | Zielgeräte MacBook, iPad und iPhone; siehe KTX-020 |
+| KTX-O02 | Offlinearbeit einschließlich Erfassen und Bearbeiten; automatischer späterer Abgleich und sichtbarer Status; siehe KTX-021 bis KTX-024 |
+
 ## Bereits erprobte Ausgestaltungen
 
 | Kennung | Status | Ausgestaltung |
@@ -43,8 +62,6 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 
 | Kennung | Frage | Auswirkung |
 |---|---|---|
-| KTX-O01 | Welche Geräte und Betriebssysteme sind zuerst wichtig? | Browserunterstützung, Installation, Testmatrix und mögliche native Erweiterungen |
-| KTX-O02 | Welche Vorgänge müssen ohne Internet funktionieren? | Lokaler Datenbestand, Warteschlange, Konflikte und Synchronisationsaufwand |
 | KTX-O03 | Einzelperson oder gemeinsamer Betrieb mit Team; welche Sichtbarkeit? | Konten, Arbeitsräume, Rechte und Nummernkreis |
 | KTX-O04 | Eigenbetrieb, gemanagter Dienst oder vollständig lokaler Betrieb? | Verfügbarkeit, Verantwortlichkeit, Datenort, Sicherung und laufender Betrieb |
 | KTX-O05 | Welche Aktivitätsfelder zusätzlich zum bestätigten Kern, mit welchen Werten? | Kanban, Priorität, Wiedervorlage, Bearbeitungstag, Ergebnis und Aufwand |
