@@ -4,6 +4,8 @@ Kontext verbindet **Objekte, Personen, Aktivitäten, Ziele und Ereignisse**, ohn
 
 **Stand: 20. November 2026.** Dieses Repository führt das Fachkonzept, die Entscheidungen, den bestehenden Oberflächenprototyp und die nächsten Arbeitspakete zusammen. Der Prototyp ist ein Interaktionsentwurf mit lokaler Browserspeicherung. Eine produktive Mehrgeräteanwendung ist noch zu entwickeln.
 
+Für das Produkt bestätigt: **MacBook, iPad und iPhone, Offlinearbeit auf allen drei Geräten, automatischer späterer Abgleich und sichtbarer Offline-/Syncstatus.** Die [Festlegung](docs/entscheidungen/0003-apple-offline-synchronisation.md) ist eine Anforderung; der bestehende Prototyp implementiert den Geräteabgleich noch nicht.
+
 ## Einstieg
 
 | Frage | Einstieg |
