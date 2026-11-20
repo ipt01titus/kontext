@@ -14,6 +14,8 @@ Stand: 20. November 2026. Grundlage ist das vollständige [Geschäftsentitätenm
 
 Bestätigte Zielstatus: offen, in Verfolgung, pausiert, erreicht, beendet ohne Erreichung. Eine Opportunity ergänzt angebotene Leistung, Vertriebsphase, erwarteten Auftragswert mit Währung und erwartete Entscheidung. Sie erhält keine zweite Identität und keine getrennte gleichrangige CRM-Entität.
 
+Aktivitäten können mit dem eigenen Status „Abgebrochen“ beendet und später wieder geöffnet werden (KTX-028). Der Datensatz einschließlich Nummer, Schritten, Kommentaren und Beziehungen bleibt erhalten. Er zählt nicht mehr als offene Arbeit. Eine abgebrochene zwingende Vorbedingung ist weiterhin unerfüllt; Nachfolger und Ziele werden nicht automatisch erledigt.
+
 ## Beziehungen
 
 | ID | Verbindung | Regel / Einordnung |

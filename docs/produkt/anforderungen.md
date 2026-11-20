@@ -26,6 +26,7 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 | KTX-018 | B | Jeder Eintrag besitzt eine dauerhaft erkennbare Nummer | Ein Eintrag ist über seine Nummer suchbar und nach Umbenennung identifizierbar |
 | KTX-019 | B | Assistenten sollen Kontext bedienen können | Die Oberfläche ist bedienbar; eine unabhängige Programmschnittstelle ist als weiterer Bedarf zu konkretisieren |
 | KTX-027 | B | Projekt beziehungsweise Kontext während der Personenanlage anlegen | Kontaktdaten und bestehende Projektzuordnungen bleiben erhalten; das neue Projekt ist anschließend zusätzlich ausgewählt. Ein Abbruch der Projektanlage erzeugt keinen Eintrag. |
+| KTX-028 | B | Nicht mehr relevante Aktivitäten abbrechen | Status „Abgebrochen“ getrennt von „Erledigt“; aus offenen Aufgaben und Wiedervorlagen herausgenommen, weiterhin auffindbar und wieder zu öffnen. Identität, Nummer, Kommentare und Beziehungen bleiben erhalten. |
 
 ## Bestätigte Anforderungen an Geräte und Synchronisation
 
@@ -60,6 +61,8 @@ Der Geräte- und Offlinebedarf ist in [Entscheidung 0003](../entscheidungen/0003
 | KTX-V06 | V | Vertrauenslevel optional als ganze Zahl; „nicht bewertet“ ist von 0 verschieden |
 | KTX-V07 | V | Fälligkeit, Bearbeitungstag, Wiedervorlage und reservierter Arbeitsblock als getrennte Zeitinformationen |
 | KTX-V08 | V | Direkte Verbindungen und abgeleitete Zusammenhänge in Sichten unterscheiden |
+
+Der zusätzliche Status „Abgebrochen“ ist durch KTX-028 bestätigt. Ein Abbruch erfüllt eine zwingende Vorbedingung nicht und bestätigt keine Zielerreichung.
 
 ## Offene Entscheidungen
 

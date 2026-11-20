@@ -6,6 +6,9 @@ function ancestors(items,id){const chain=[],seen=new Set();let item=items.find(x
 function within(items,id,parent){return ancestors(items,id).some(x=>x.id===parent);}
 function ordered(items){const result=[],seen=new Set();function visit(x){if(seen.has(x.id))return;seen.add(x.id);result.push(x);items.filter(c=>c.parent===x.id).forEach(visit);}items.filter(x=>!x.parent||!items.some(p=>p.id===x.parent)).forEach(visit);items.forEach(visit);return result;}
 function numberRecords(data){const records=Object.values(collections).flatMap(k=>data[k]||[]),seen=new Set();let next=Math.max(1,Number.isSafeInteger(data.nextNumber)?data.nextNumber:1,...records.map(x=>Number.isSafeInteger(x.number)&&x.number>0?x.number+1:1));for(const x of records){if(!Number.isSafeInteger(x.number)||x.number<1||seen.has(x.number))x.number=next++;seen.add(x.number);}data.nextNumber=next;}
+const taskStatuses={open:"Offen",progress:"In Arbeit",done:"Erledigt",cancelled:"Abgebrochen"};
+function isTaskOpen(task){return task.status==="open"||task.status==="progress";}
+function isTaskBlocked(tasks,task){return(task.predecessors||[]).some(id=>tasks.find(t=>t.id===id)?.status!=="done");}
 function migrate(data){
  if(!data.hierarchyVersion){
   const add=p=>{if(!data.projects.some(x=>x.id===p.id))data.projects.push(p);};
@@ -18,5 +21,5 @@ function migrate(data){
  for(const p of data.projects){if(!Object.hasOwn(p,"parent"))p.parent=null;if(!p.description)p.description="";}
  numberRecords(data);return data;
 }
-root.KontextModel={collections,ancestors,within,ordered,numberRecords,migrate};
+root.KontextModel={collections,ancestors,within,ordered,numberRecords,migrate,taskStatuses,isTaskOpen,isTaskBlocked};
 })(globalThis);

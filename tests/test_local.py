@@ -30,6 +30,16 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(loaded['state'],self.state)
         self.assertEqual(loaded['revision'],1)
 
+    def test_cancel_reopen_and_restore_preserve_task_and_relationships(self):
+        cancelled=copy.deepcopy(self.state);cancelled['tasks'][0]['status']='cancelled'
+        self.store.save('own',cancelled,1,'cancel')
+        self.assertEqual(Store(self.temp.name).load('own')['state'],cancelled)
+        backup=self.store.backup()
+        reopened=copy.deepcopy(cancelled);reopened['tasks'][0]['status']='open'
+        self.store.save('own',reopened,2,'reopen')
+        self.assertEqual(self.store.load('own')['state'],reopened)
+        self.assertEqual(self.store.restore('own',backup,3,'restore-cancelled')['state'],cancelled)
+
     def test_lost_response_retry_is_idempotent_and_stale_edit_conflicts(self):
         self.assertEqual(self.store.save('own',self.state,0,'initial')['revision'],1)
         changed=copy.deepcopy(self.state);changed['tasks'][0]['name']='Geändert'
@@ -104,6 +114,16 @@ class HttpTests(unittest.TestCase):
             exported=json.load(response)
         self.assertEqual(exported['data'],fixture())
         self.assertEqual(Store(self.temp.name).load('own')['state'],fixture())
+
+    def test_cancelled_state_is_saved_exported_and_reopened_over_http(self):
+        state=fixture();state['tasks'][0]['status']='cancelled'
+        self.post(dict(workspace='own',state=state,revision=0,operationId='cancelled'))
+        with urllib.request.urlopen(self.url+'/api/export?workspace=own') as response:
+            exported=json.load(response)
+        self.assertEqual(exported['data'],state)
+        state['tasks'][0]['status']='open'
+        reopened=self.post(dict(workspace='own',state=state,revision=1,operationId='reopened'))
+        self.assertEqual(reopened['state'],state)
     def test_cross_origin_writes_and_data_directory_access_are_rejected(self):
         with self.assertRaises(urllib.error.HTTPError) as ctx:self.post({},'https://unrelated.example')
         self.assertEqual(ctx.exception.code,403)
