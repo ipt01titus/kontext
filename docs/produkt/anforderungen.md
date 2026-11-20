@@ -25,6 +25,7 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 | KTX-017 | B | Auffindbare Objektbäume und hierarchische Projekte | Unterobjekte/Unterprojekte lassen sich gliedern; „Mein Leben“ kann die persönlichen Bereiche aufnehmen |
 | KTX-018 | B | Jeder Eintrag besitzt eine dauerhaft erkennbare Nummer | Ein Eintrag ist über seine Nummer suchbar und nach Umbenennung identifizierbar |
 | KTX-019 | B | Assistenten sollen Kontext bedienen können | Die Oberfläche ist bedienbar; eine unabhängige Programmschnittstelle ist als weiterer Bedarf zu konkretisieren |
+| KTX-027 | B | Projekt beziehungsweise Kontext während der Personenanlage anlegen | Kontaktdaten und bestehende Projektzuordnungen bleiben erhalten; das neue Projekt ist anschließend zusätzlich ausgewählt. Ein Abbruch der Projektanlage erzeugt keinen Eintrag. |
 
 ## Bestätigte Anforderungen an Geräte und Synchronisation
 
