@@ -1,10 +1,20 @@
 # Implementierungsstand
 
-Stand: 20. November 2026. Der übernommene Quellstand ist ein interaktiver Entwurf. `prototype/dist/` enthält HTML, CSS und JavaScript ohne Build oder externe Abhängigkeiten. Speicherung erfolgt unter `kontext-entwurf-v1` im jeweiligen Browser. Der feste Demotag ist der 18. November 2026.
+Stand: 20. November 2026 · Version 0.2.0. `app/` enthält den vorgezogenen lokalen Mac-Pilot mit SQLite-Speicherung und Sicherungen. Der historische Entwurf unter `prototype/dist/` bleibt erhalten; nur dieser speichert ausschließlich im Browser und verwendet den festen Demotag 18. November.
+
+## Lokaler Mac-Pilot
+
+- Doppelklick-Starter und Beenden über die beiden `.command`-Dateien; lokaler Python-Dienst auf `127.0.0.1:8773`.
+- Eigene Daten und Beispieldaten getrennt, aktuelle lokale Tagesanzeige.
+- Dauerhafte SQLite-Snapshots; bestätigte Speicherung, Revisionsschutz gegen Überschreiben und wiederholbare Speicheraufträge nach verlorener Antwort.
+- Automatische konsistente Sicherung vor Änderungen; manuelle Sicherung, JSON-Export/Import und Wiederherstellung mit vorheriger Sicherheitssicherung.
+- Laufzeitdaten außerhalb der Produktdateien und von Git ausgeschlossen. Kein Geräteabgleich oder externer Dienst erforderlich.
+
+Details: [Betriebsanleitung](betrieb/mac-probebetrieb.md), [Entscheidung 0005](entscheidungen/0005-lokaler-mac-pilot.md) und [Issue #11](https://github.com/ipt01titus/kontext/issues/11). Die folgende Tabelle dokumentiert überwiegend den übernommenen fachlichen Oberflächenumfang; sie ist keine Zusage, dass alle Produktfelder bereits vollständig umgesetzt sind.
 
 | Bereich | Im Prototyp erprobt | Für das Produkt noch erforderlich |
 |---|---|---|
-| Tagessicht | Termine, relevante Aktivitäten und Wiedervorlagen | Echte Tageslogik, vollständige Zeit-/Zeitzonenregeln und zentraler Bestand |
+| Tagessicht | Termine, relevante Aktivitäten und Wiedervorlagen; Pilot mit aktuellem lokalen Datum | Vollständige Zeit-/Zeitzonenregeln und Geräteabgleich |
 | Personen | Projektübergreifender Zusammenhang, erwartete Rückmeldungen, Ziele, Kontaktfelder und Vertrauenslevel | Vollständige iPhone-Kontaktstruktur, Import, Dubletten und differenzierte Rollen |
 | Aktivitäten | Liste/Kanban, Schritte, Kommentare, Bezüge und Vorgänger/Nachfolger | Verbindlicher Feldumfang und vollständige Bearbeitung aller Beziehungen |
 | Objekte | Anlage, Bearbeitung, Baum, Suche mit Pfad, Anlage aus Aktivitätsdialog | Produktiver Datenvertrag und vollständige Pflege zusätzlicher Beziehungen |
@@ -13,7 +23,7 @@ Stand: 20. November 2026. Der übernommene Quellstand ist ein interaktiver Entwu
 | Ereignisse | Kalender, Terminvorbereitung, Gesprächsdokumentation und Verbindungen | Externe Kalender, Wiederholungen, getrennte Plan-/Istzeiten und Konfliktregeln |
 | Eintragsnummern | Einmalige lokale Vergabe, Erhalt bei Bearbeitung und globale Suche | Zentraler Nummernkreis und kollisionssichere Migration aus mehreren Beständen |
 | Assistenten | Bedienung der Oberfläche praktisch geprüft | Authentifizierte API und gegebenenfalls MCP |
-| Datenaustausch | Persistenz im selben Browser | Geräteabgleich, Teamzugriff, Sicherung, Export und Wiederherstellung |
+| Datenaustausch | Pilot: SQLite, Sicherung, Export, Import und Wiederherstellung | Geräteabgleich, Teamzugriff und endgültiger Datenvertrag |
 | Integrationen | Erklärende Platzhalter | Echte Kontakte, Kalender, E-Mail und weitere Kanäle |
 
 Bestätigte Produktanforderung: Nutzung auf MacBook, iPad und iPhone mit Offlinearbeit, automatischem Geräteabgleich und sichtbarem Offline-/Abgleichstatus. Diese Funktionen sind mit der neuen Festlegung noch nicht implementiert. Siehe [Entscheidung 0003](entscheidungen/0003-apple-offline-synchronisation.md).
@@ -24,6 +34,14 @@ Bestätigte Produktanforderung: Nutzung auf MacBook, iPad und iPhone mit Offline
 - Vier automatisierte Modellprüfungen bestanden: Erhalt eigener Daten und Kommentare bei Migration, idempotente Migration, hierarchische Filter, stabile eindeutige Nummern und bewusste Wurzelzuordnung.
 - Browserabläufe geprüft: Objektanlage und Abbruch aus Aktivität, Erhalt von Name/Schritten/Fälligkeit, gespeicherte Verknüpfung nach erneutem Laden, Objektbaum mit drei Ebenen, Projektanlage sowie Verschiebung und Umbenennung bei unveränderter Nummer, Nummernsuche und Elternkontextfilter.
 - Mobile Darstellung bei 390 Pixeln geprüft. Dies ist kein vollständiger Test auf allen Zielgeräten.
+
+## Prüfungen des Mac-Piloten
+
+- Elf automatisierte Prüfungen für Speicherung und lokalen HTTP-Zugriff: Wiederöffnung, unveränderte IDs/Nummern/Beziehungen/Kommentare, idempotente Wiederholung, konkurrierende Änderungen, Sicherungsfehler, Wiederherstellung und Nummernzähler, getrennte Arbeitsbereiche, ungültige Graphen und Zugriffsschutz.
+- Im Browser: eigener Projektkontext, Aktivität mit Name/Schritten/Fälligkeit, neues Objekt direkt aus der Aktivitätsanlage, gespeicherter Bezug und Kommentar; nach Beenden und Neustart des lokalen Dienstes unverändert erhalten.
+- Manuelle Sicherung und Wiederherstellung im Browser: späteren Kommentar zurückgesetzt, ursprünglichen Kommentar, Schritte, Nummer und Objektbezug erhalten. Schreibversuch bei beendetem Dienst: Eingaben bleiben sichtbar; nach Neustart und erneutem Versuch genau einmal gespeichert und nach Neuladen erhalten.
+- JSON-Export und anschließenden Dateiimport im Browser abgeschlossen: Aktivität #4 mit Objektbezug #3, Fälligkeit, zwei Schritten und beiden Kommentaren erhalten. Wechsel zu den getrennten Beispieldaten und zurück erhält den eigenen Testbestand. Alle diese Prüfungen verwenden einen eigenen Datenordner auf Port 8775; der Alltagstest beginnt separat auf Port 8773.
+- Lokale Ressourcen werden vollständig vom Mac ausgeliefert; die HTTP-Prüfungen benötigen keine externen Dienste. Die Netzwerkverbindung des Mac wurde für den Test nicht abgeschaltet; ein kompletter macOS-Neustart wurde nicht ausgeführt.
 
 ## Ausgangsstand und Veröffentlichung
 

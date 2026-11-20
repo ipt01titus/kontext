@@ -1,6 +1,12 @@
 # Roadmap
 
-Status: Vorgeschlagene Fortsetzung nach der strukturierten Übernahme am 20. November 2026. Die angelegten GitHub Issues konkretisieren diese Arbeitspakete. Neue Produktfunktionen werden aus den bestätigten Anforderungen abgeleitet.
+Status: 20. November 2026. Auf Wunsch von Urs wird vor dem Anschluss von iPad und iPhone der **lokale Mac-Probebetrieb** umgesetzt. Version 0.2.0 bildet diesen ersten Alltagstest ab. Die weiteren Arbeitspakete bleiben bestehen.
+
+## Vorgezogener Schritt: Mac im Alltag testen
+
+[Issue #11](https://github.com/ipt01titus/kontext/issues/11) und die [Betriebsanleitung](../betrieb/mac-probebetrieb.md) beschreiben Start, dauerhafte Datenhaltung, aktuelle Tagessicht, getrennte Beispieldaten und Sicherung/Wiederherstellung. Anschließend echte Arbeitsabläufe mit kleinen eigenen Beständen testen und beobachtete Lücken als konkrete Issues festhalten. Die vollständige Mehrgerätearchitektur blockiert diesen Schritt nicht.
+
+## Weiterer Produktpfad
 
 | Schritt | Inhalt | Ergebnis | Voraussetzung |
 |---|---|---|---|
@@ -31,4 +37,4 @@ Schritte 1 und 2 können im Gespräch parallel geklärt werden. Die Integrations
 
 Ein Issue hält jeweils eine abgegrenzte Frage oder Änderung fest. Dokumente erklären das zusammenhängende Produkt; Issues enthalten konkrete Aufgaben und Abnahmekriterien. Es gibt zunächst keine automatische Bearbeitung, keinen eingerichteten Agentenworker und keinen automatischen Produktdeploy.
 
-Neue inhaltliche Entscheidungen werden im Katalog und gegebenenfalls als Entscheidungsdokument ergänzt. Pull Requests verbinden Umsetzung, Anforderungen und ausgeführte Prüfung. Die vorhandene CI prüft den Prototyp, nicht die noch zu entwickelnde Serveranwendung.
+Neue inhaltliche Entscheidungen werden im Katalog und gegebenenfalls als Entscheidungsdokument ergänzt. Pull Requests verbinden Umsetzung, Anforderungen und ausgeführte Prüfung. Die CI prüft JavaScript, das bisherige Modell und die lokale Speicherung samt HTTP-Grenzen. Geräteabgleich und externe Integrationen sind dadurch noch nicht geprüft.
