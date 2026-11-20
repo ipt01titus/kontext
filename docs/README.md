@@ -11,3 +11,5 @@ Die [Referenzunterlagen](referenz/README.md) enthalten die vollständigen frühe
 | O | Offene Entscheidung |
 
 Die Kennzeichnung beschreibt fachlichen Beschlussstatus. Sie ist unabhängig davon, ob eine Funktion im Prototyp bereits sichtbar ist.
+
+Die bestätigte Regel für automatische Zusammenführung und die Auswahl bei widersprüchlichen Feldänderungen steht in [Entscheidung 0004 – Synchronisationskonflikte](entscheidungen/0004-synchronisationskonflikte.md).
