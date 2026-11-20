@@ -9,6 +9,10 @@ function numberRecords(data){const records=Object.values(collections).flatMap(k=
 const taskStatuses={open:"Offen",progress:"In Arbeit",done:"Erledigt",cancelled:"Abgebrochen"};
 function isTaskOpen(task){return task.status==="open"||task.status==="progress";}
 function isTaskBlocked(tasks,task){return(task.predecessors||[]).some(id=>tasks.find(t=>t.id===id)?.status!=="done");}
+function eventEndDate(event){return event.endDate||event.date;}
+function eventIsMultiDay(event){return eventEndDate(event)>event.date;}
+function eventOccursOn(event,day){return day>=event.date&&day<=eventEndDate(event)&&!(eventIsMultiDay(event)&&day===eventEndDate(event)&&event.end==="00:00");}
+function eventIsUpcoming(event,day){return eventEndDate(event)>day||eventOccursOn(event,day);}
 function migrate(data){
  if(!data.hierarchyVersion){
   const add=p=>{if(!data.projects.some(x=>x.id===p.id))data.projects.push(p);};
@@ -21,5 +25,5 @@ function migrate(data){
  for(const p of data.projects){if(!Object.hasOwn(p,"parent"))p.parent=null;if(!p.description)p.description="";}
  numberRecords(data);return data;
 }
-root.KontextModel={collections,ancestors,within,ordered,numberRecords,migrate,taskStatuses,isTaskOpen,isTaskBlocked};
+root.KontextModel={collections,ancestors,within,ordered,numberRecords,migrate,taskStatuses,isTaskOpen,isTaskBlocked,eventEndDate,eventIsMultiDay,eventOccursOn,eventIsUpcoming};
 })(globalThis);

@@ -113,13 +113,16 @@ def validate(state):
                 dates(row, ('targetDate', 'decisionDate'))
             if key == 'events':
                 refs(row, 'goals', 'goals'); refs(row, 'tasks', 'tasks')
-                dates(row, ('date',))
+                dates(row, ('date', 'endDate'))
                 if not row.get('date'):
                     raise Invalid('Ein Ereignis benötigt ein Datum.')
+                end_date = row.get('endDate') or row['date']
+                if end_date < row['date']:
+                    raise Invalid('Das Enddatum liegt vor dem Startdatum.')
                 for field in ('start', 'end'):
                     if row.get(field) and not re.fullmatch(r'(?:[01]\d|2[0-3]):[0-5]\d', row[field]):
                         raise Invalid('Ungültige Uhrzeit.')
-                if row.get('start') and row.get('end') and row['end'] < row['start']:
+                if end_date == row['date'] and row.get('start') and row.get('end') and row['end'] < row['start']:
                     raise Invalid('Das Ende liegt vor dem Beginn.')
             if key == 'objects':
                 if not isinstance(row.get('links', []), list):
