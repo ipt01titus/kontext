@@ -35,8 +35,10 @@ Stand: 20. November 2026. B = bestätigt/angefordert, V = Vorschlag, O = offen. 
 | KTX-022 | B | Änderungen automatisch im Hintergrund abgleichen, sobald die Verbindung es zulässt | Ohne manuellen Start senden und empfangen; nach erfolgreichem Abgleich haben alle erreichbaren Geräte denselben fachlichen Stand |
 | KTX-023 | B | Offlinezustand und ausstehende Synchronisation sichtbar anzeigen | Verbindung und Abgleichstand getrennt erkennbar, einschließlich lokal noch nicht übertragener Änderungen |
 | KTX-024 | B | Offlineänderungen dauerhaft lokal erhalten | Noch nicht übertragene Änderungen überstehen das Schließen und erneute Öffnen der Anwendung und werden später abgeglichen |
+| KTX-025 | B | Unabhängige neue Ergänzungen wie Kommentare automatisch zusammenführen | Zwei offline ergänzte Kommentare bleiben nach dem Abgleich beide am selben Eintrag erhalten |
+| KTX-026 | B | Widersprüchliche Änderungen desselben Feldes zur Auswahl anbieten | Beide Varianten bleiben erhalten; eine verständliche Auswahl ermöglicht die Auflösung ohne stillschweigendes Überschreiben |
 
-Der vereinbarte Bedarf ist in [Entscheidung 0003](../entscheidungen/0003-apple-offline-synchronisation.md) festgehalten. Ein Offlinegerät kann Änderungen anderer Geräte erst nach erneutem Abgleich kennen. Der gewünschte Hintergrundbetrieb bei inaktiver Anwendung bleibt ein maßgebliches Auswahlkriterium; die Einschränkungen von iOS/iPadOS werden nicht als bereits erfüllte Funktion dargestellt. Mindestversionen, genaue Abgleichfristen bei inaktiver/geschlossener App, Konfliktregeln und lokale Bereitstellung großer Datenbestände sind noch auszuarbeiten.
+Der Geräte- und Offlinebedarf ist in [Entscheidung 0003](../entscheidungen/0003-apple-offline-synchronisation.md), die bestätigte Konfliktregel in [Entscheidung 0004](../entscheidungen/0004-synchronisationskonflikte.md) festgehalten. Ein Offlinegerät kann Änderungen anderer Geräte erst nach erneutem Abgleich kennen. Der gewünschte Hintergrundbetrieb bei inaktiver Anwendung bleibt ein maßgebliches Auswahlkriterium; die Einschränkungen von iOS/iPadOS werden nicht als bereits erfüllte Funktion dargestellt. Mindestversionen, genaue Abgleichfristen bei inaktiver/geschlossener App, technische Konflikterkennung und lokale Bereitstellung großer Datenbestände sind noch auszuarbeiten.
 
 ### Geklärte bisherige Fragen
 

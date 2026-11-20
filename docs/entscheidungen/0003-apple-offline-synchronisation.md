@@ -36,7 +36,7 @@ Die bisherige Empfehlung einer Web-App wird deshalb erneut gegen eine native App
 
 - Mindestversionen von macOS, iPadOS und iOS.
 - Erwartetes Abgleichverhalten bei aktiver, inaktiver, gesperrter und ausdrücklich beendeter Anwendung; akzeptable Verzögerung im Hintergrund.
-- Konfliktbehandlung bei gleichzeitiger Offlinebearbeitung und Behandlung globaler Hierarchieregeln.
+- Technische Konflikterkennung und Behandlung globaler Hierarchieregeln. Die fachliche Grundregel für Ergänzungen und widersprüchliche Feldänderungen ist inzwischen in [Entscheidung 0004](0004-synchronisationskonflikte.md) bestätigt.
 - Endgültige Nummernvergabe bei Offlineanlage.
 - Nutzerkreis, Datenort, Hosting und Wiederherstellung.
 

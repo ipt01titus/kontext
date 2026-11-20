@@ -61,7 +61,11 @@ Beispiel: Auf dem Mac wird ein Kommentar zu einer Aktivität ergänzt. Das iPhon
 
 ### Gleichzeitige Änderungen
 
-Ändern Mac und iPhone denselben Fälligkeitstermin auf Grundlage desselben alten Stands, soll keine Änderung stillschweigend verloren gehen. Der Server prüft den mitgesendeten Änderungsstand. Eine veraltete Änderung wird als Konflikt zurückgemeldet und zur bewussten Auswahl angeboten. Für HTTP kann dies beispielsweise über starke ETags und `If-Match` nach RFC 9110 umgesetzt werden.
+Die fachliche Regel ist bestätigt: Unabhängige neue Ergänzungen wie Kommentare werden automatisch zusammengeführt. Widersprüchliche Änderungen desselben Feldes bleiben als beide Varianten erhalten und werden in einer verständlichen Auswahl zur Auflösung angeboten. Siehe [Entscheidung 0004](../entscheidungen/0004-synchronisationskonflikte.md), KTX-025 und KTX-026.
+
+Beispiel: Zwei offline erfasste Kommentare zu derselben Aktivität bleiben beide erhalten. Setzen Mac und iPhone dagegen denselben Fälligkeitstermin ausgehend von einem gemeinsamen alten Stand auf unterschiedliche Tage, wird der Konflikt sichtbar. Keine Variante wird allein wegen der neueren Geräteuhr stillschweigend bevorzugt.
+
+Die technische Erkennung ist noch zu entwerfen. Ein Vorschlag ist die Prüfung des mitgesendeten Änderungsstands. Für HTTP kann dies beispielsweise über starke ETags und `If-Match` nach RFC 9110 umgesetzt werden. Eine veraltete Anfrage ist nicht automatisch ein fachlicher Konflikt; insbesondere müssen unabhängige neue Kommentare weiterhin zusammengeführt werden können.
 
 Für unterschiedliche Felder kann später eine kontrollierte Zusammenführung sinnvoll sein. Hierarchien und gerichtete Beziehungen brauchen zusätzlich eine gemeinsame Konsistenzprüfung: Zwei einzeln erlaubte Verschiebungen dürfen zusammen keinen Kreis erzeugen. Eine Konfliktstrategie allein anhand der Geräteuhr ist keine ausreichende fachliche Lösung.
 
@@ -123,7 +127,8 @@ Im bestehenden Entwurf kann ein Assistent bei verfügbarem Browserzugriff die Ob
 
 - Auf Gerät A angelegte Einträge erscheinen mit denselben Identitäten, Nummern und Beziehungen auf Gerät B.
 - Ein erneuter Sendeversuch nach verlorener Antwort erzeugt keinen zweiten Eintrag.
-- Gleichzeitige widersprüchliche Änderungen werden sichtbar behandelt.
+- Zwei unabhängig ergänzte Kommentare bleiben nach dem Abgleich beide erhalten; Übertragungswiederholungen vervielfachen sie nicht.
+- Widersprüchliche Änderungen desselben Feldes erhalten beide Varianten und werden zur verständlichen Auswahl angeboten.
 - Ein Gerätewechsel erhält Kommentare, Hierarchien, Abhängigkeiten und externe Zuordnungen.
 - Auf MacBook, iPad und iPhone überstehen ungesendete Änderungen einen Neustart und werden nach Wiederverbindung automatisch korrekt übernommen.
 - Offlinezustand, ausstehende Änderungen, letzter bestätigter Abgleich, Fehler und Konflikte sind unterscheidbar.
