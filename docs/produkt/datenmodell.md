@@ -16,6 +16,8 @@ Bestätigte Zielstatus: offen, in Verfolgung, pausiert, erreicht, beendet ohne E
 
 Aktivitäten können mit dem eigenen Status „Abgebrochen“ beendet und später wieder geöffnet werden (KTX-028). Der Datensatz einschließlich Nummer, Schritten, Kommentaren und Beziehungen bleibt erhalten. Er zählt nicht mehr als offene Arbeit. Eine abgebrochene zwingende Vorbedingung ist weiterhin unerfüllt; Nachfolger und Ziele werden nicht automatisch erledigt.
 
+Ereignisse können mehrere Tage umfassen (KTX-029). `date` bleibt das Startdatum; das optionale `endDate` ergänzt das Enddatum. Ohne Enddatum gilt der bisherige eintägige Zeitraum. Bei mehrtägigen Terminen beziehen sich Beginn und Ende auf den ersten bzw. letzten Tag. Ohne Uhrzeiten zählt das Enddatum mit; bei einem zeitlichen Ende um 00:00 ist der Endtag nicht mehr belegt. Ein Enddatum vor dem Start und ein zeitliches Ende vor dem Beginn am selben Tag sind unzulässig. Dies ersetzt keine spätere Zeitzonen- oder Plan-/Istzeitregel.
+
 ## Beziehungen
 
 | ID | Verbindung | Regel / Einordnung |

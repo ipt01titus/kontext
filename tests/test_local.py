@@ -40,6 +40,24 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(self.store.load('own')['state'],reopened)
         self.assertEqual(self.store.restore('own',backup,3,'restore-cancelled')['state'],cancelled)
 
+    def test_multiday_event_survives_reopen_edit_and_restore_with_all_links(self):
+        state=copy.deepcopy(self.state)
+        state['events'][0].update(endDate='2026-11-23',start='20:00',end='07:00')
+        self.store.save('own',state,1,'multiday')
+        self.assertEqual(Store(self.temp.name).load('own')['state'],state)
+        backup=self.store.backup()
+        edited=copy.deepcopy(state);edited['events'][0]['endDate']='2026-11-24'
+        self.store.save('own',edited,2,'extend')
+        self.assertEqual(self.store.restore('own',backup,3,'restore-event')['state'],state)
+
+    def test_invalid_event_ranges_leave_the_saved_state_unchanged(self):
+        for change in [dict(endDate='2026-11-19'),dict(endDate='2026-02-30'),dict(endDate='2026-11-20',start='20:00',end='07:00')]:
+            with self.subTest(change=change):
+                bad=copy.deepcopy(self.state);bad['events'][0].update(change)
+                with self.assertRaises(Invalid):self.store.save('own',bad,1,'bad-range')
+                self.assertEqual(self.store.load('own')['state'],self.state)
+                self.assertEqual(self.store.load('own')['revision'],1)
+
     def test_lost_response_retry_is_idempotent_and_stale_edit_conflicts(self):
         self.assertEqual(self.store.save('own',self.state,0,'initial')['revision'],1)
         changed=copy.deepcopy(self.state);changed['tasks'][0]['name']='Geändert'
@@ -104,8 +122,8 @@ class HttpTests(unittest.TestCase):
         self.url='http://127.0.0.1:'+str(self.server.server_port)
     def tearDown(self):
         self.server.shutdown();self.server.server_close();self.thread.join();self.temp.cleanup()
-    def post(self,payload,origin=None):
-        req=urllib.request.Request(self.url+'/api/state',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Origin':origin or self.url,'X-Kontext-Client':'1'},method='POST')
+    def post(self,payload,origin=None,path='/api/state'):
+        req=urllib.request.Request(self.url+path,data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Origin':origin or self.url,'X-Kontext-Client':'1'},method='POST')
         with urllib.request.urlopen(req) as response:return json.load(response)
     def test_save_export_and_restart_persist_without_external_services(self):
         saved=self.post(dict(workspace='own',state=fixture(),revision=0,operationId='http-save'))
@@ -124,6 +142,17 @@ class HttpTests(unittest.TestCase):
         state['tasks'][0]['status']='open'
         reopened=self.post(dict(workspace='own',state=state,revision=1,operationId='reopened'))
         self.assertEqual(reopened['state'],state)
+
+    def test_multiday_event_is_saved_exported_and_imported_over_http(self):
+        state=fixture();state['events'][0].update(endDate='2026-11-23',start='20:00',end='07:00')
+        self.post(dict(workspace='own',state=state,revision=0,operationId='multiday'))
+        with urllib.request.urlopen(self.url+'/api/export?workspace=own') as response:
+            exported=json.load(response)
+        self.assertEqual(exported['data'],state)
+        state['events'][0]['endDate']='2026-11-24'
+        imported=self.post(dict(workspace='own',state=state,revision=1,operationId='import-event'),path='/api/import')
+        self.assertEqual(imported['state'],state)
+        self.assertEqual(Store(self.temp.name).load('own')['state'],state)
     def test_cross_origin_writes_and_data_directory_access_are_rejected(self):
         with self.assertRaises(urllib.error.HTTPError) as ctx:self.post({},'https://unrelated.example')
         self.assertEqual(ctx.exception.code,403)
