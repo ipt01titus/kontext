@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#193c38">
+<meta name="description" content="Kontext verbindet deinen Tag mit Menschen, Dingen, Aufgaben und Zielen. Ein interaktiver Oberflächenentwurf.">
+<title>Kontext · Dein Arbeitsraum</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="hierarchy.css">
+<script src="model.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Zum Inhalt</a>
+<div id="app"></div>
+<dialog id="drawer" class="drawer" aria-label="Details"></dialog>
+<dialog id="modal" class="modal" aria-label="Eintrag bearbeiten"></dialog>
+<dialog id="object-modal" class="modal nested-modal" aria-label="Neues Objekt"></dialog>
+<dialog id="search-dialog" class="search-dialog" aria-label="Arbeitsraum durchsuchen"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

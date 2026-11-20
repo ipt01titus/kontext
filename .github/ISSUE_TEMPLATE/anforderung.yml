@@ -1,0 +1,27 @@
+name: Anforderung oder Konzeptfrage
+description: Bedarf, Entscheidung oder fachliche Änderung beschreiben
+title: "Anforderung: "
+body:
+  - type: textarea
+    id: situation
+    attributes:
+      label: Situation und gewünschter Nutzen
+      description: Was soll in welcher konkreten Situation möglich sein?
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Anforderungen und Vorentscheidungen
+      description: Kennungen, Dokumente und verwandte Issues
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Beobachtbare Abnahmekriterien
+      description: Woran erkennen wir, dass der Bedarf erfüllt ist?
+    validations:
+      required: true
+  - type: textarea
+    id: questions
+    attributes:
+      label: Offene Fragen und Abhängigkeiten

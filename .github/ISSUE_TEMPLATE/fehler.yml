@@ -1,0 +1,25 @@
+name: Fehler
+description: Ein unerwartetes Verhalten nachvollziehbar festhalten
+title: "Fehler: "
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte und tatsächliches Verhalten
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartetes Verhalten
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Gerät, Browser und Version
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Weitere Hinweise
+      description: Keine persönlichen Kontaktdaten, Tokens oder produktiven Notizen einfügen.
