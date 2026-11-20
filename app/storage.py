@@ -91,7 +91,7 @@ def validate(state):
                 if not isinstance(row.get('extra', {}), dict):
                     raise Invalid('Ungültige Kontaktzusatzfelder.')
             if key == 'tasks':
-                if row.get('status') not in ('open', 'progress', 'done'):
+                if row.get('status') not in ('open', 'progress', 'done', 'cancelled'):
                     raise Invalid('Unbekannter Aktivitätsstatus.')
                 if row.get('owner') not in known['people']:
                     raise Invalid('Verantwortliche Person fehlt.')
